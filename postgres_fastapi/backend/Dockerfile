@@ -5,15 +5,14 @@ ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
     VENV_PATH="/opt/pysetup/.venv"
 
 
 
 
-WORKDIR /backend
 
+WORKDIR /backend
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -31,4 +30,5 @@ COPY poetry.lock* pyproject.toml ./
 RUN poetry install --no-dev
 
 COPY . ./
+ENV PYTHONPATH=./
 EXPOSE 8000

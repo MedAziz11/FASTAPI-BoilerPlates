@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from core.config import settings
+from app.core.config import settings
+
+from app.apis.apis import api_router
+
 
 
 def get_application():
@@ -20,4 +23,8 @@ def get_application():
 
 app = get_application()
 
+@app.get("/root")
+async def root():
+    return {"response": "hello world"}
 
+app.include_router(api_router)
