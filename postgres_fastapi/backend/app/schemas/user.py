@@ -16,4 +16,11 @@ class User(BaseModel):
     is_superuser:bool = False
     
     class Config:
-        orm_mode = True 
+        orm_mode = True
+        
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    is_active: Optional[bool] = True
+    is_superuser: bool = False
+    full_name: Optional[str] = None
+    password: Optional[str] = None
