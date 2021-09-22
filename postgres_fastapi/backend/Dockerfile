@@ -8,10 +8,6 @@ ENV PYTHONUNBUFFERED=1 \
     POETRY_NO_INTERACTION=1 \
     VENV_PATH="/opt/pysetup/.venv"
 
-
-
-
-
 WORKDIR /backend
 
 RUN apt-get update \

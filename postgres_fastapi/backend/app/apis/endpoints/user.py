@@ -28,36 +28,35 @@ def create_user(
     user = user_crud.user.create(db, obj_in = user_in)
     return user
 
-# @router.get("/me/", response_model = User)
-# def get_current_user(
-#     *,
-#     db:Session=Depends(deps.get_db),
-#     current_user:UserResponse = Depends(deps.get_current_active_user),
-# )->UserResponse:
+@router.get("/me/", response_model = UserResponse)
+def get_current_user(
+    *,
+    db:Session=Depends(deps.get_db),
+    current_user:UserResponse = Depends(deps.get_current_active_user),
+)->UserResponse:
     
-#     return current_user
+    return current_user
 
-# @router.put("/", response_model=User)
-# def update_active_current_user(
-#     *,
-#     db: Session = Depends(deps.get_db),
-#     password: str = Body(None),
-#     full_name: str = Body(None),
-#     email: EmailStr = Body(None),
-#     current_user: User = Depends(deps.get_current_active_user),
-# ) -> Any:
-#     """
-#     Update user.
-#     """
-#     current_user_data = jsonable_encoder(current_user)
-#     user_in = UserUpdate(**current_user_data)
-#     if password is not None:
-#         user_in.password = password
-#     if full_name is not None:
-#         user_in.full_name = full_name
-#     if email is not None:
-#         user_in.email = email
-#     user = user_crud.user.update(db, db_obj=current_user, obj_in=user_in)
-#     return user
-    
+@router.put("/me/", response_model=UserResponse)
+def update_active_current_user(
+    *,
+    db: Session = Depends(deps.get_db),
+    password: str = Body(None),
+    full_name: str = Body(None),
+    email: EmailStr = Body(None),
+    current_user: User = Depends(deps.get_current_active_user),
+) -> Any:
+    """
+    Update user.
+    """
+    current_user_data = jsonable_encoder(current_user)
+    user_in = UserUpdate(**current_user_data)
+    if password is not None:
+        user_in.password = password
+    if full_name is not None:
+        user_in.full_name = full_name
+    if email is not None:
+        user_in.email = email
+    user = user_crud.user.update(db, db_obj=current_user, obj_in=user_in)
+    return user
     
