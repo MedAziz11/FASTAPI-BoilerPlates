@@ -28,7 +28,6 @@ def login_access_token(db: Session = Depends(deps.get_db),
     access_token_expires = timedelta(minutes = settings.ACCESS_TOKEN_EXPIRE)
     response =  {
         "access_token":create_access_token(user.id, access_token_expires),
-        "token_type": "bearer",
-        "expires": access_token_expires
+        "token_type": "bearer"
     }
     return JWToken(**response)

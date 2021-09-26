@@ -1,4 +1,3 @@
-from sqlalchemy.sql.functions import current_user
 from app.core.database import SessionLocal
 from app.models.user import User
 from app.schemas.jwt import JWTData
@@ -8,7 +7,7 @@ from app.apis.crud import user_crud
 
 from sqlalchemy.orm.session import Session
 from typing import Generator
-from jose import jwt
+import jwt
 from pydantic import ValidationError
 
 from fastapi.security import OAuth2PasswordBearer
@@ -17,8 +16,9 @@ from fastapi import Depends, HTTPException
 
 
 oauth2_token = OAuth2PasswordBearer(
-    tokenUrl= "/login/access-token"
+    tokenUrl= "/login/access-token/"
 )
+
 
 def get_db()-> Generator:
     try:
@@ -35,11 +35,12 @@ def get_current_user(
     try:
         payload = jwt.decode(
             token, 
-            settings.SECRET_KEY, algorithms = [security.ALGORTHM]
+            settings.SECRET_KEY, algorithms = [security.ALGORITHM]
             )
         token_data = JWTData(**payload)     
         
-    except (jwt.JWTError, ValidationError):
+    except (jwt.exceptions.InvalidSignatureError, ValidationError) as e:
+        print(e)
         raise HTTPException(
             status_code=403,
             detail="invalid credentials"
@@ -53,8 +54,8 @@ def get_current_user(
     return user
 
 
-def get_current_active_user(user: User= Depends(get_current_user)):
-    if not user.is_active(current_user):
+def get_current_active_user(current_user: User= Depends(get_current_user)):
+    if not user_crud.user.is_active(current_user):
         raise HTTPException(status=404, detail="Inactive User")
-    return user
+    return current_user
 
